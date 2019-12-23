@@ -252,6 +252,9 @@ export class TextField extends TextFieldBase {
         switch (this.variant) {
             case 'none':
             case 'filled':
+                if (value.color) {
+                    this._controller.borderFillColor = value.color.ios;
+                }
                 super[backgroundInternalProperty.setNative](value);
                 break;
             case 'outline':

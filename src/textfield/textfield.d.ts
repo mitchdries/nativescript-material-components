@@ -19,7 +19,7 @@ export type TextFieldProperties = Partial<Pick<TextField, keyof TextField>>;
 export class TextField extends NTextField {
     /*
      * nativeView
-    * @Android : com.google.android.material.textfield.TextInputLayout
+     * @Android : com.google.android.material.textfield.TextInputLayout
      * @iOS : MDCTextField
      */
     nativeViewProtected: any;
@@ -31,6 +31,8 @@ export class TextField extends NTextField {
     placeholderColor: Color;
     variant: string;
     error: string;
+    visibilityToggle: boolean;
+    iosNormalColor: Color;
 
     focus();
     blur();

@@ -1,11 +1,23 @@
 import { TextFieldBase } from './textfield.common';
 import { backgroundInternalProperty, placeholderColorProperty } from '@nativescript/core/ui/editable-text-base';
-import { errorColorProperty, errorProperty, floatingColorProperty, floatingProperty, helperProperty, maxLengthProperty, strokeColorProperty, buttonColorProperty } from './textfield_cssproperties';
+import {
+    errorColorProperty,
+    errorProperty,
+    floatingColorProperty,
+    floatingProperty,
+    helperProperty,
+    maxLengthProperty,
+    strokeColorProperty,
+    buttonColorProperty,
+    visibilityToggleProperty,
+    iosNormalColorProperty
+} from './textfield_cssproperties';
 import { themer } from 'nativescript-material-core/core';
 import { Color } from '@nativescript/core/color';
 import { Style } from '@nativescript/core/ui/styling/style';
 import { Background } from '@nativescript/core/ui/styling/background';
 import { screen } from '@nativescript/core/platform/platform';
+import { ToggleTapHandlerImpl, createInitialImageView } from './textfield-visibility-toggle.ios';
 
 let colorScheme: MDCSemanticColorScheme;
 function getColorScheme() {
@@ -100,6 +112,8 @@ class TextInputControllerFilledImpl extends TextInputControllerFilled {
 export class TextField extends TextFieldBase {
     nativeViewProtected: MDCTextField;
     private _controller: MDCTextInputControllerBase;
+    private _secureVisibilityToggleHandler;
+
     public readonly style: Style & { variant: 'outline' | 'underline' | 'filled' };
 
     public clearFocus() {
@@ -185,6 +199,30 @@ export class TextField extends TextFieldBase {
             this._controller.floatingPlaceholderActiveColor = color;
         }
         this._updateAttributedPlaceholder();
+    }
+    [iosNormalColorProperty.setNative](value: Color) {
+        const color = value instanceof Color ? value.ios : value;
+        this._controller.normalColor = color;
+        this._updateAttributedPlaceholder();
+    }
+    [visibilityToggleProperty.setNative](value: boolean) {
+        if (!value) {
+            return;
+        }
+        const imageView = createInitialImageView();
+        if (this.iosNormalColor.ios) {
+            imageView.tintColor = this.iosNormalColor.ios;
+        }
+
+        // Tap handler
+        const toggleTapHandler = ToggleTapHandlerImpl.initWithOwnerAndTextField(new WeakRef(this), this.ios);
+        const recognizer = UITapGestureRecognizer.alloc().initWithTargetAction(toggleTapHandler, 'tap');
+        this._secureVisibilityToggleHandler = toggleTapHandler; // assign to object, otherwise GC will clear it
+        imageView.addGestureRecognizer(recognizer); // bind tap gesture
+
+        // Assign trailing view
+        this.ios.trailingView = imageView;
+        this.ios.trailingViewMode = UITextFieldViewMode.Always;
     }
     [errorColorProperty.setNative](value: Color) {
         const color = value instanceof Color ? value.ios : value;

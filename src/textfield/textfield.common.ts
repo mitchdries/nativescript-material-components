@@ -21,4 +21,6 @@ export abstract class TextFieldBase extends NTextField {
     @cssProperty strokeColor: Color;
     @cssProperty floatingColor: Color;
     @cssProperty buttonColor: Color;
+    @cssProperty visibilityToggle: boolean;
+    @cssProperty iosNormalColor: Color;
 }

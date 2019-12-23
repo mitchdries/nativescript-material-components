@@ -9,13 +9,22 @@
         "tsc": "cp ../../src/textfield/textfield.d.ts ./ && ../../node_modules/.bin/tsc --skipLibCheck",
         "ngc-win": "../../node_modules/.bin/ngc",
         "ngc": "NODE_OPTIONS=--max_old_space_size=8192 ../../node_modules/.bin/ngc",
-        "clean": "../../node_modules/.bin/rimraf ./*.d.ts ./*.js ./*.js.map"
+        "clean": "../../node_modules/.bin/rimraf ./*.d.ts ./*.js ./*.js.map",
+        "postinstall": "node scripts/postinstall.js",
+        "preuninstall": "node scripts/preuninstall.js"
     },
     "nativescript": {
         "platforms": {
             "android": "6.2.0",
             "ios": "6.2.0"
-        }
+        },
+        "hooks": [
+            {
+                "type": "before-prepare",
+                "script": "scripts/before-prepare.js",
+                "inject": true
+            }
+        ]
     },
     "keywords": [
         "NativeScript",

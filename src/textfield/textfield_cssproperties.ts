@@ -32,6 +32,19 @@ export const floatingProperty = new CssProperty<Style, boolean>({
     valueConverter: booleanConverter
 });
 floatingProperty.register(Style);
+export const iosNormalColorProperty = new CssProperty<Style, Color>({
+    name: 'iosNormalColor',
+    cssName: 'ios-normal-color',
+    equalityComparer: Color.equals,
+    valueConverter: v => new Color(v)
+});
+iosNormalColorProperty.register(Style);
+export const visibilityToggleProperty = new CssProperty<Style, boolean>({
+    name: 'visibilityToggle',
+    cssName: 'visibility-toggle',
+    valueConverter: booleanConverter
+});
+visibilityToggleProperty.register(Style);
 export const floatingColorProperty = new CssProperty<Style, Color>({
     name: 'floatingColor',
     cssName: 'floating-color',

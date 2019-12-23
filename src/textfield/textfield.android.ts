@@ -4,7 +4,16 @@ import { backgroundInternalProperty, borderBottomLeftRadiusProperty, hintPropert
 import { Background } from '@nativescript/core/ui/styling/background';
 import { ad } from '@nativescript/core/utils/utils';
 import { TextFieldBase } from './textfield.common';
-import { errorColorProperty, errorProperty, floatingColorProperty, floatingProperty, helperProperty, maxLengthProperty, strokeColorProperty } from './textfield_cssproperties';
+import {
+    errorColorProperty,
+    errorProperty,
+    floatingColorProperty,
+    floatingProperty,
+    helperProperty,
+    maxLengthProperty,
+    strokeColorProperty,
+    visibilityToggleProperty
+} from './textfield_cssproperties';
 
 // declare module '@nativescript/core/ui/text-field' {
 //     interface TextField {
@@ -175,6 +184,10 @@ export class TextField extends TextFieldBase {
         this.dismissSoftInput();
     }
 
+    [visibilityToggleProperty.setNative](value: boolean) {
+        (this.layoutView as any).setEndIconMode(1);
+    }
+
     [errorColorProperty.setNative](value: Color) {
         const color = value instanceof Color ? value.android : value;
         (this.layoutView as any).setErrorTextColor(android.content.res.ColorStateList.valueOf(color));
@@ -186,6 +199,7 @@ export class TextField extends TextFieldBase {
     [errorProperty.setNative](value: string) {
         this.layoutView.setError(!!value ? value : null);
         this.layoutView.setErrorEnabled(!!value);
+        (this.layoutView as any).setErrorIconDrawable(null);
     }
 
     [maxLengthProperty.setNative](value: number) {

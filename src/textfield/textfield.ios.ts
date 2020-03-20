@@ -17,7 +17,7 @@ import { Color } from '@nativescript/core/color';
 import { Style } from '@nativescript/core/ui/styling/style';
 import { Background } from '@nativescript/core/ui/styling/background';
 import { screen } from '@nativescript/core/platform/platform';
-import { ToggleTapHandlerImpl, createInitialImageView } from './textfield-visibility-toggle.ios';
+import { ToggleTapHandlerImpl, createInitialImageView, createInitialImageViewFrame } from './textfield-visibility-toggle.ios';
 
 let colorScheme: MDCSemanticColorScheme;
 function getColorScheme() {
@@ -215,13 +215,15 @@ export class TextField extends TextFieldBase {
         }
 
         // Tap handler
-        const toggleTapHandler = ToggleTapHandlerImpl.initWithOwnerAndTextField(new WeakRef(this), this.ios);
+        const toggleTapHandler = ToggleTapHandlerImpl.initWithOwnerAndTextField(new WeakRef(this), this.ios, imageView);
         const recognizer = UITapGestureRecognizer.alloc().initWithTargetAction(toggleTapHandler, 'tap');
         this._secureVisibilityToggleHandler = toggleTapHandler; // assign to object, otherwise GC will clear it
         imageView.addGestureRecognizer(recognizer); // bind tap gesture
 
         // Assign trailing view
-        this.ios.trailingView = imageView;
+        const frame = createInitialImageViewFrame(imageView);
+        frame.addSubview(imageView);
+        this.ios.trailingView = frame;
         this.ios.trailingViewMode = UITextFieldViewMode.Always;
     }
     [errorColorProperty.setNative](value: Color) {
